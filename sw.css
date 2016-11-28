@@ -1,0 +1,21 @@
+body {
+	background: black url('Stars200.png');
+	color: springgreen;
+}
+.footer{
+	text-align: center;
+	width: 200px;
+	padding: 5px;
+	position: fixed;
+	bottom: 0;
+	background:black;
+}
+figure, button {
+	margin: 10px;
+}
+section {
+	margin-top: 20px
+}
+img:hover {
+	cursor: url('32.png'), pointer;
+}

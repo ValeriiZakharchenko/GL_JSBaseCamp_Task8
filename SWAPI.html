@@ -1,195 +1,54 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-	<meta charset="utf-8">
 	<title>Star Wars heroes viewer</title>
-	<style>
-	/* {
-			cursor: url('Yoda.png'), pointer;
-	}*/
-	body {
-		background-color:#000310;
-		color: #bbb;
-		padding: 10px;
-	}
-	aside, header, footer {
-		text-align: center;
-	} 
-	section, aside {
-		display: inline-block;
-		vertical-align: top;
-		width: 30%;
-	}
-	img {
-		width: 50%;
-		min-width:100px;
-		max-width:350px;
-		height: auto;
-	} 
-	img:hover {
-		cursor: url('32.png'), pointer;
-	}
-	footer {
-		position: absolute;
-  		right: 0;
-  		bottom: 10px;
-  		left: 0;
-	}
-	</style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	<link rel="stylesheet" href="sw.css">
+	
 </head>
 <body>
-<div class='container'>
-	<header>
-		<h1>Star Wars Heroes</h1>
-		<h3>A long time ago, in a galaxy far,<br>far away....</h3>
-	</header>
-	<aside class='containerPicture'>
-		<figure>
-			<figcaption></figcaption>
-			<img name='heroFace' src='./Yoda.gif' alt='Face of hero'>
-		</figure>
-		<input type='button' value='prev' name='prev' style="display:inline-block;">
-		<input type='button' value='next' name='next' style="display:inline-block;">
-	</aside>
-	<section class = 'containerInfo'>
-		<p name='name'></p>
-		<p name='height'></p>
-		<p name='mass'></p>
-		<p name='hair'></p>
-		<p name='skin'></p>
-		<p name='eye'></p>
-		<p name='birth'></p>
-		<p name='gender'></p>
-	</section>
-	<section class='containerEpisode'>
+	<div class='container'>
+		<header class='text-center'>
+			<h1>Star Wars Heroes</h1>
+		</header>
+		<div class='row'>
+			<section class='col-sm-4 text-center'>
+				<figure>
+					<figcaption>Who controls the bacon, he controls the Universe!</figcaption>
+					<img name='heroFace' src='YodaStand.png' alt='Face of hero' class='img-responsive' style='max-width:300px;max-height:300px'>
+				</figure>
+				<button name='prev' type="button" class="btn btn-success">Previous <span class="badge hadViewed">0</span></button>
+				<button name='next' type="button" class="btn btn-success">Next <span class="badge willViewed">87</span></button>
+			</section>
 
-	</section>
-	<footer style="clear:left;">
-		Valerii. Kyiv. 2016.
-	</footer>
-</div>
+			<section class='col-sm-4 containerInfo'>
+				<p name='name'></p>
+				<p name='height'></p>
+				<p name='mass'></p>
+				<p name='hair'></p>
+				<p name='skin'></p>
+				<p name='eye'></p>
+				<p name='birth'></p>
+				<p name='gender'></p>
+			</section>
 
-<script>
-	var maxIndexPeople;
-	var curIndexHero = 1;
-	var arrAdditionHeaders;
-	
-	//document.addEventListener("DOMContentLoaded", findPeople(1));
-
-	init();
-	
-	function init() {
-		var xhri = new XMLHttpRequest();
-		xhri.open('GET', `http://swapi.co/api/people/`, true);
-		xhri.onreadystatechange = function () { 
-
-				if (xhri.readyState === 4) {
-					if (xhri.status === 200) {
-						var res = JSON.parse(xhri.responseText);
-						maxIndexPeople = res.count + 1;
-					} else {
-						alert(`Error: ${xhr.status} \n ${xhr.responseText} `);
-					}
-				}
+			<section class='col-sm-4 containerEpisode'>
+			</section>
 			
-		}
-		xhri.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-		xhri.send();
-		document.querySelector('input[name=prev]').setAttribute('disabled', 'disabled');
-		document.querySelector('input[name=prev]').addEventListener('click', prevHero);
-		document.querySelector('input[name=next]').addEventListener('click', nextHero);
-		
-		findPeople (curIndexHero);
-	}
+			<footer class='col-sm-12 text-center'>
+				<div class='footer'>Valerii </div>
+			</footer>
+		</div>
+	</div>
 	
-	function nextHero() {
-		curIndexHero++;
-		findPeople(curIndexHero);
-		if (document.querySelector("input[name=prev]").hasAttribute('disabled'))		//	If button prew was disabled - enable it.
-			document.querySelector("input[name=prev]").removeAttribute('disabled');
-		else if (curIndexHero === maxIndexPeople)										//	Curren hero is last - disable the next buton.
-			document.querySelector('input[name=next]').setAttribute('disabled', 'disabled');
-	}
-	
-	function prevHero() {
-		curIndexHero--;
-		findPeople(curIndexHero);
-		if (document.querySelector("input[name=next]").hasAttribute('disabled'))		//	if button next was disabled - enable it.
-			document.querySelector("input[name=next]").removeAttribute('disabled')
-		else if (curIndexHero === 1) {													//	Current hero is first.
-			document.querySelector('input[name=prev]').setAttribute('disabled', 'disabled');
-		}
-	}
-	
-	function findPeople(num) {
-		var xhr = new XMLHttpRequest();
-		xhr.open('GET', `http://swapi.co/api/people/${num}/`, true);
-		try {
-			xhr.onreadystatechange = function () { 
-			
-				if (xhr.readyState === 4) {
-					if (xhr.status === 200) {
-						parseResponsePeople(xhr.responseText);
-						if ( xhr.getAllResponseHeaders().indexOf('Access-Control-Expose-Headers') >= 0 ) {
-								alert (xhr.getResponseHeader('Access-Control-Expose-Headers')); 
-								arrAdditionHeaders = xhr.getResponseHeader('Access-Control-Expose-Headers').split(', ');
-								document.images['heroFace'].src = arrAdditionHeaders[0];
-							}
-					}
-					else if (xhr.status === 404) {
-						alert(`Error: ${xhr.status} \n ${xhr.responseText} `);
-					}
-				}
-			}
-			xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-			xhr.send();
-		}
-		catch (err) {
-			alert (`Acures Error: ${err.name} \n ${err.message}`);
-		}
-	}
-	
-	function parseResponsePeople(infoPeople) {
-		let info = JSON.parse( infoPeople );
-		let infoNode = document.querySelector('.containerInfo');
-		
-		//alert (info)
-		if (info.name)			infoNode.children['name'].innerHTML = 'Name: ' + info.name;
-		if (info.height)		infoNode.children['height'].innerHTML = 'Height: ' + info.height/100 + ' m';
-		if (info.mass)			infoNode.children['mass'].innerHTML = 'Mass: ' + info.mass + ' Kg';
-		if (info.hair_color)	infoNode.children['hair'].innerHTML = 'Hair Color: ' + info.hair_color;
-		if (info.skin_color)	infoNode.children['skin'].innerHTML = 'Skin Color: ' + info.skin_color;
-		if (info.eye_color)		infoNode.children['eye'].innerHTML = 'Eye Color: ' + info.eye_color;
-		if (info.birth_year)	infoNode.children['birth'].innerHTML = 'Birth Year: ' + info.birth_year.replace('BBY',' BBY');
-		if (info.gender)		infoNode.children['gender'].innerHTML = 'Gender: ' + info.gender;
-		
-		findFilms (info.films);
-	}
-	
-	function findFilms( arr ) {
-		let episode = document.querySelector('.containerEpisode');
-		//let crawler = [];
-
-		episode.innerHTML = '';
-
-		for (let i = 0, len = arr.length; i < len; i++) {
-			let x = new XMLHttpRequest();
-			x.open('GET', arr[i], true )
-			x.onreadystatechange = function () { 
-				if (x.readyState === 4) {
-					if (x.status === 200) {
-						let filmObj = JSON.parse(x.responseText);
-						episode.innerHTML += `<p>Episode ${filmObj.episode_id}: ${filmObj.title}</p>`;
-						//crawler.push( filmObj.opening_crawl );
-					} else {
-						alert( `Error: ${x.status} \n${x.responseText}`);
-					}
-				}
-			}
-			x.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-			x.send();
-		}
-	}
-</script>
+	<script src="sw.js"></script>
+	<script>
+		;
+	</script>
 </body>
 <html>
