@@ -4,7 +4,8 @@ var maxIndexPeople;
 var curIndexHero = 1;
 var arrAdditionHeaders;
 
-
+/* Function for check statuse of response from WSAPI.CO
+ */
 var checkStatus = function (response) {
 	if (response.status >= 200 && response.status < 300) {
 		return response;
@@ -15,13 +16,11 @@ var checkStatus = function (response) {
 	}
 };
 
-function init() {
+/* Initialization variables and set eventhandlers and view of page.
+ */
+var init = function () {
 	fetch ( `http://swapi.co/api/people/` )
 	.then ( checkStatus )
-	.catch ( function (err) {
-			alert ( `Error:${err.status} \n ${err.statusText}` )
-			return -1;
-	} )
 	.then ( function (res) { return res.json() } )
 	.then ( function (res) {
 		maxNumberHeroes = res.count;
@@ -38,16 +37,22 @@ function init() {
 		var textNode = document.createTextNode( `${footerText}` );
 		document.querySelector('div.footer').appendChild( textNode );
 	})
-	. then ( findPeople (curIndexHero) )
+	.then ( findPeople (curIndexHero) )
+	.catch ( function (err) {
+			alert ( `Error:${err.status} \n ${err.statusText}` )
+	} )
 	
 }
 
+/* Function searching poeple in SWAPI.CO.
+ * parameter - number poeple in list.
+ */
 var findPeople = function (num) {
-	fetch(`http://swapi.co/api/people/${num}/`)
-	.then(checkStatus)
-	.catch( function (err) {
+	fetch ( `http://swapi.co/api/people/${num}/` )
+	.then ( checkStatus )
+	.catch ( function (err) {
 			alert ( `Error:${err.status} \n ${err.statusText}` )
-			return -1;
+			throw err;
 	} )
 	.then ( function (res) { return res.json() } )
 	.then ( parseResponsePeople )
@@ -57,7 +62,12 @@ var findPeople = function (num) {
 		
 		var resArr = '';
 		for (let i = 0; i < arrFilms.length; i++ ) {
-			fetch (arrFilms[i])
+			fetch ( arrFilms[i] )
+			.then ( checkStatus )
+			.catch ( function (err) {
+					alert ( `Error:${err.status} \n ${err.statusText}` )
+					throw err;
+			} )
 			.then ( function (res) { return res.json() } )
 			.then ( function (filmObj) {
 				episode.innerHTML +=  `<p>Episode ${filmObj.episode_id}: ${filmObj.title}</p>`;
@@ -65,8 +75,8 @@ var findPeople = function (num) {
 		}
 	})
 	.catch ( function (err) {
-				alert ( `${err.message}` );
-				return -1; 
+		alert ( `${err.message}` );
+		return -1; 
 	} );
 }
 
