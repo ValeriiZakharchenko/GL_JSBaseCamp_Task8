@@ -1,0 +1,45 @@
+body {
+	background: black url('Stars200.png');
+	color: springgreen;
+}
+.footer {
+	text-align: center;
+	width: 200px;
+	padding: 5px;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	background:black;
+}
+figure, button {
+	margin: 10px;
+}
+section {
+	margin-top: 20px
+}
+img:hover {
+	cursor: url('32.png'), pointer;
+}
+
+/******* Animation *******/
+@keyframes movess {
+	from {left:0;}
+	to {left:100px;}
+}
+
+.anim {
+	/*background: url('runlukerun.gif');*/
+	background: url('bb8_tumblr.gif');
+	background-size: 118px;
+	width:110px;
+	height:160px;
+	/*width: 118px;
+	height: 96px;*/
+	position: relative;
+	left: 0;
+	animation-name: movess;
+	animation-iteration-count: infinite;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-direction: alternate;
+}
